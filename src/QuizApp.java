@@ -5,33 +5,88 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class QuizApp extends JFrame implements ActionListener {
+public class QuizApp  implements ActionListener {
 
-    private String name;
-    private ArrayList<Question> questions;
-    private int currentQuestionIndex;
     private int score;
+    private String name;
+    private int seconds = 5;  
+    private int currentQuestionIndex;
 
-    private JLabel questionLabel;
+    private JFrame frame = new JFrame();
+    private JLabel countDown = new JLabel();
+    private JLabel remainingTime = new JLabel();
+    private JTextArea askedQuestion = new JTextArea();
+    private JTextField questionNumber = new JTextField();
     private JRadioButton[] options;
-    private JButton nextButton;
+    private JButton submitButton;
+    
+    private Timer timer = new Timer(1000, new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			seconds--;
+			countDown.setText(String.valueOf(seconds));
+			if(seconds<=0) {
+				displayAnswer(-1);
+			}
+			}
+		});
 
     public QuizApp(String name) {
-        this.name = name;
-        this.questions = initializeQuestions();
+        
+    	this.name = name;
         this.currentQuestionIndex = 0;
         this.score = 0;
 
-        setLayout(new BorderLayout());
-        getContentPane().setBackground(Color.WHITE);
+        frame.setSize(650, 650);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setLayout(null);
+        frame.getContentPane().setBackground(Color.BLACK);
 
-        questionLabel = new JLabel();
-        questionLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-        add(questionLabel, BorderLayout.NORTH);
+               
+        questionNumber.setBounds(0,0,650,50);
+        questionNumber.setBackground(new Color(25,25,25));
+        questionNumber.setForeground(new Color(25,255,0));
+        questionNumber.setFont(new Font("Ink Free",Font.BOLD,30));
+        questionNumber.setBorder(BorderFactory.createBevelBorder(1));
+        questionNumber.setHorizontalAlignment(JTextField.CENTER);
+        questionNumber.setEditable(false);
+        frame.add(questionNumber);
+        
+        askedQuestion.setBounds(0,50,650,75);
+		askedQuestion.setLineWrap(true);
+		askedQuestion.setWrapStyleWord(true);
+		askedQuestion.setBackground(new Color(25,25,25));
+		askedQuestion.setForeground(new Color(25,255,0));
+		askedQuestion.setFont(new Font("MV Boli",Font.BOLD,25));
+		askedQuestion.setBorder(BorderFactory.createBevelBorder(1));
+		askedQuestion.setEditable(false);
+		frame.add(askedQuestion);	
+		
+		remainingTime.setBounds(175,150,100,25);
+		remainingTime.setBackground(new Color(50,50,50));
+		remainingTime.setForeground(new Color(255,0,0));
+		remainingTime.setFont(new Font("MV Boli",Font.PLAIN,30));
+		remainingTime.setHorizontalAlignment(JTextField.CENTER);
+		remainingTime.setText("Time :");
+		frame.add(remainingTime);		
+		
+		countDown.setBounds(275,125,100,75);
+		countDown.setBackground(new Color(25,25,25));
+		countDown.setForeground(new Color(255,0,0));
+		countDown.setFont(new Font("Ink Free",Font.BOLD,40));
+		countDown.setBorder(BorderFactory.createBevelBorder(1));
+		countDown.setOpaque(true);
+		countDown.setHorizontalAlignment(JTextField.CENTER);
+		countDown.setText(String.valueOf(seconds));
+		frame.add(countDown);		
 
         JPanel optionsPanel = new JPanel();
         optionsPanel.setLayout(new GridLayout(4, 1, 10, 10));
-        optionsPanel.setBackground(Color.WHITE);
+        optionsPanel.setBackground(Color.BLACK);
+        optionsPanel.setBounds(0, 200, 650, 300 );
 
         options = new JRadioButton[4];
         ButtonGroup group = new ButtonGroup();
@@ -39,72 +94,140 @@ public class QuizApp extends JFrame implements ActionListener {
         for (int i = 0; i < 4; i++) {
             options[i] = new JRadioButton();
             options[i].setFont(new Font("Tahoma", Font.PLAIN, 16));
-            options[i].setBackground(Color.WHITE);
+            options[i].setForeground(Color.BLACK);
+            options[i].setBackground(Color.GRAY);
             group.add(options[i]);
             optionsPanel.add(options[i]);
         }
+        frame.add(optionsPanel);
 
-        add(optionsPanel, BorderLayout.CENTER);
-
-        nextButton = new JButton("Next");
-        nextButton.setBackground(new Color(30, 144, 254));
-        nextButton.setForeground(Color.WHITE);
-        nextButton.addActionListener(this);
-        add(nextButton, BorderLayout.SOUTH);
+        submitButton = new JButton("Submit");
+        submitButton.setBounds(275, 550, 100, 55);
+        submitButton.setBackground(new Color(30, 144, 254));
+        submitButton.setForeground(Color.WHITE);
+        submitButton.addActionListener(this);
+        frame.add(submitButton);
 
         displayQuestion();
 
-        setSize(600, 400);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
-    }
-
-    private ArrayList<Question> initializeQuestions() {
-        // Add your coding questions here
-        ArrayList<Question> questions = new ArrayList<>();
-        questions.add(new Question("What does HTML stand for?", "Hyper Text Markup Language", "Hyper Transfer Markup Language", "High Text Markup Language", "Hyper Technical Markup Language", 0));
-        questions.add(new Question("What is the output of the following code: print(2 + 3 * 4)", "20", "14", "15", "23", 3));
-        // Add more questions as needed
-        return questions;
+        frame.setVisible(true);
     }
 
     private void displayQuestion() {
-        if (currentQuestionIndex < questions.size()) {
-            Question currentQuestion = questions.get(currentQuestionIndex);
+       
+    	if (currentQuestionIndex < Question.questions.length) {
 
-            questionLabel.setText(currentQuestion.getQuestion());
-
+        	questionNumber.setText("Question "+(currentQuestionIndex+1));
+        	askedQuestion.setText(Question.questions[currentQuestionIndex]);
+			
             for (int i = 0; i < 4; i++) {
-                options[i].setText(currentQuestion.getOptions()[i]);
+                options[i].setText(Question.options[currentQuestionIndex][i]);
             }
+           
+            timer.start();
+            
         } else {
             showScore();
         }
     }
+    
+    
 
     private void showScore() {
-        setVisible(false);
-        new Score(name, score, questions.size()).setVisible(true);
+        frame.setVisible(false);
+        new Score(name, score, Question.questions.length).setVisible(true);
     }
 
     public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == nextButton) {
-            checkAnswer();
-            currentQuestionIndex++;
-            clearSelection();
-            displayQuestion();
-        }
+    	
+    	submitButton.setEnabled(false);
+    	
+    	/*options[0].setEnabled(false);
+		options[1].setEnabled(false);
+		options[2].setEnabled(false);
+		options[3].setEnabled(false);*/
+    	
+    	if (ae.getSource() == submitButton) {
+            displayAnswer(checkAnswer());
+        	}
     }
+   
 
-    private void checkAnswer() {
-        Question currentQuestion = questions.get(currentQuestionIndex);
-        for (int i = 0; i < 4; i++) {
-            if (options[i].isSelected() && i == currentQuestion.getCorrectOption()) {
+    private void displayAnswer(int index) {
+    	
+    	timer.stop();
+    	
+    	if(index != -1) {
+        	options[index].setForeground(Color.green);
+        }
+    	else {
+    		index = Question.correctAnswers[currentQuestionIndex];
+    		options[index].setForeground(Color.green);
+    		
+    		switch (index) {
+    			
+    			case 0:
+    				options[1].setForeground(Color.red);
+    				options[2].setForeground(Color.red);
+    				options[3].setForeground(Color.red);
+    			break;
+    			
+    			case 1:
+    				options[0].setForeground(Color.red);
+    				options[2].setForeground(Color.red);
+    				options[3].setForeground(Color.red);
+        		break;
+    			
+    			case 2:
+    				options[0].setForeground(Color.red);
+    				options[1].setForeground(Color.red);
+    				options[3].setForeground(Color.red);
+        		break;	
+    			
+    			case 3:
+    				options[0].setForeground(Color.red);
+    				options[1].setForeground(Color.red);
+    				options[2].setForeground(Color.red);
+        		break;
+    		}
+    	}
+    	
+    	Timer pause = new Timer(2000, new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				options[0].setForeground(Color.BLACK);
+				options[1].setForeground(Color.BLACK);
+				options[2].setForeground(Color.BLACK);
+				options[3].setForeground(Color.BLACK);
+				
+				seconds = 5;
+				countDown.setText(String.valueOf(seconds));
+				submitButton.setEnabled(true);
+				/*options[0].setEnabled(true);
+				options[1].setEnabled(true);
+				options[2].setEnabled(true);
+				options[3].setEnabled(true);*/
+				currentQuestionIndex++;
+				clearSelection();
+				displayQuestion();
+			}
+			
+    		});
+    	pause.setRepeats(false);
+    	pause.start();
+    }
+    
+    private int checkAnswer() {
+    	int index = -1;
+    	for (int i = 0; i < 4; i++) {
+            if (options[i].isSelected() && i == Question.correctAnswers[currentQuestionIndex]) {
                 score++;
+                index = i;
                 break;
             }
         }
+    	return index;
     }
 
     private void clearSelection() {

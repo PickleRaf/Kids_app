@@ -49,9 +49,7 @@ public class Score extends JFrame implements ActionListener {
         new QuizApp(name);
     }
 
-    public static void main(String[] args) {
-        new Score("Young Coder", 2, 5); // Example with 2 correct answers out of 5
-    }
+
 }
 
 

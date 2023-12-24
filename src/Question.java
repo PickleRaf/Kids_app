@@ -1,26 +1,20 @@
 
-public class Question {
+public final class Question {
 
-    private String question;
-    private String[] options;
-    private int correctOption;
+    public static final  String[] questions = {
+    		"how much is 1 + 1 ?",
+    		"are you  a swiftie ? (please don't be id have to find you and kill you :) )",
+    		"who runs the wolrd ?",
+    		"messi or ronaldo ?",
+    };
+    public static final String[][] options = {
+    		{"11","2","to dumb to know","quick maffs"},
+    		{"big one","vive kanye","nes nes","meh"},
+    		{"GIRLS!","Teboun","l9bayel","jews"},
+    		{"messi","ronaldo","maguire","super slim aka slimani"},
+    };
+    
+    public static final int[] correctAnswers = {0,1,2,3};
 
-    public Question(String question, String option1, String option2, String option3, String option4, int correctOption) {
-        this.question = question;
-        this.options = new String[]{option1, option2, option3, option4};
-        this.correctOption = correctOption;
-    }
-
-    public String getQuestion() {
-        return question;
-    }
-
-    public String[] getOptions() {
-        return options;
-    }
-
-    public int getCorrectOption() {
-        return correctOption;
-    }
 }
 
