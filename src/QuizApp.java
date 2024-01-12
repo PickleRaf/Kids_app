@@ -181,7 +181,7 @@ public class QuizApp implements ActionListener {
             }
         }
 
-        Timer pause = new Timer(2000, e -> {
+        Timer pause = new Timer(1000, e -> {
             for (int i = 0; i < 4; i++) {
                 options[i].setForeground(Color.BLACK);
             }
