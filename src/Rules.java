@@ -11,31 +11,30 @@ public class Rules extends JFrame implements ActionListener {
 
     Rules(String name) {
         this.name = name;
-        getContentPane().setBackground(Color.WHITE);
+        getContentPane().setBackground(Color.BLACK);
         setLayout(new BorderLayout());
 
-        JLabel heading = new JLabel("Welcome " + name + " to Kids Coding Quiz");
-        heading.setFont(new Font("Viner Hand ITC", Font.BOLD, 28));
-        heading.setForeground(new Color(30, 144, 254));
+        JLabel heading = new JLabel("<html><div style='text-align: center; color: #1aff1a;'>Welcome " + name + " to the Coding Quiz</div></html>");
+        heading.setFont(new Font("Ink Free", Font.BOLD, 28));
         add(heading, BorderLayout.NORTH);
 
-        JLabel rulesLabel = new JLabel("<html>" +
-                "1. Welcome, young coder! Get ready for some coding fun." + "<br><br>" +
-                "2. Answer the coding questions and earn points." + "<br><br>" +
-                "3. Each correct answer adds to your score. Let's see how high you can go!" + "<br><br>" +
-                "4. If a question is tricky, take your time and give it your best shot." + "<br><br>" +
-                "5. Good luck, and enjoy the coding adventure!" +
-                "<html>");
+        JLabel rulesLabel = new JLabel("<html><div style='text-align: center; color: #ffffff;'>" +
+                "1. Welcome, " + name + "! Get ready for an exciting coding quiz." + "<br><br>" +
+                "2. Answer the coding questions and test your knowledge." + "<br><br>" +
+                "3. Each correct answer adds to your score. Let's see how well you do!" + "<br><br>" +
+                "4. If a question is challenging, take your time and give it your best shot." + "<br><br>" +
+                "5. Good luck, and enjoy the quiz!" +
+                "</div></html>");
         rulesLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
         add(rulesLabel, BorderLayout.CENTER);
 
-        startButton = new JButton("Start Coding Quiz");
+        startButton = new JButton("Start Quiz");
         startButton.setBackground(new Color(30, 144, 254));
         startButton.setForeground(Color.WHITE);
         startButton.addActionListener(this);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.setBackground(Color.BLACK);
         buttonPanel.add(startButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
@@ -49,13 +48,14 @@ public class Rules extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == startButton) {
             setVisible(false);
-            new QuizApp(name);
+            SwingUtilities.invokeLater(() -> new IP());
         }
     }
 
     public static void main(String[] args) {
-        new Rules("Young Coder");
+        new Rules("Quiz Taker");
     }
 }
+
 
 
